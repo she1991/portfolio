@@ -1,0 +1,17 @@
+/*Only custom font declaration*/
+.title {
+    font-family: 'Cinzel', serif;
+	font-size: 60;
+	text-align: center;
+}
+
+.commentary {
+    font-family: 'Libre Baskerville', serif;
+}
+
+.author {
+	font-family: 'Libre Baskerville', serif;
+	font-size: 14;
+	color: #787776;
+	text-align: center;
+}
