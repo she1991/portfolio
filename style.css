@@ -1,0 +1,16 @@
+.name-svg {
+	margin-left:auto;
+	margin-right:auto;
+	display:block;
+}
+.portfolio-svg {
+	margin-left:auto;
+	margin-right:auto;
+	display:block;
+}
+.design-legend {
+	fill: #da0c6f;
+}
+.code-legend {
+	fill: #00b2ac;
+}
