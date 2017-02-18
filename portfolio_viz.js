@@ -7,6 +7,8 @@ var checkedDesign = null;
 var uncheckedDesign = null;
 var checkedCode = null;
 var uncheckedCode = null;
+var projectObjects = [];
+var tileGroupElementObjects = [];
 function initPortfolioSVG() {
 	var portfolioSVG = d3.select(".portfolio-div")
                     .append("svg")
@@ -21,8 +23,8 @@ function initPortfolioSVG() {
 	drawLegend(portfolio);
 	//Draw radio buttons
 	drawSortControls(portfolio);
-	//Draw the first rendering of project tiles
-	renderTiles(portfolio);	
+	//start processing json
+	readProjects(portfolio);
 }
 function drawLegend(portfolio) {
 	//legends for code and design on top left
@@ -35,7 +37,7 @@ function drawLegend(portfolio) {
 	portfolio.append("text")
 				.attr("x", 80)
 				.attr("y", 33)
-				.attr("font-family", "Anton")
+				.attr("font-family", "Mada")
 				.attr("font-size", "30px")
 				.text(": Design");
 	portfolio.append("rect")
@@ -47,7 +49,7 @@ function drawLegend(portfolio) {
     portfolio.append("text")
                 .attr("x", 80)
                 .attr("y", 78)
-                .attr("font-family", "Anton")
+                .attr("font-family", "Mada")
                 .attr("font-size", "30px")
                 .text(": Code");				
 }
@@ -56,7 +58,7 @@ function drawSortControls(portfolio) {
 	portfolio.append("text")
                 .attr("x", 520)
                 .attr("y", 55)
-                .attr("font-family", "Anton")
+                .attr("font-family", "Mada")
                 .attr("font-size", "30px")
                 .text("Sort :");
 	//Radio for design
@@ -82,6 +84,19 @@ function drawSortControls(portfolio) {
             checkedDesign.attr("visibility", "visible");
 			checkedCode.attr("visibility", "hidden");
 			uncheckedCode.attr("visibility", "visible");
+			//Sort the projectObjects by code
+            projectObjects.sort(designComparator);
+            projectObjects = calcDimensions(projectObjects);
+            //Iterate through new co-ordinates and call moveTile on every such tileGroupELement
+            for(var i=0; i<projectObjects.length; i++){
+                //get its tile Id and search for the same group element
+                for(var j=0; j<tileGroupElementObjects.length; j++){
+                    if(projectObjects[i].tileId == tileGroupElementObjects[j].attr("tileId")){
+                        moveTile(projectObjects[i].tileId, projectObjects[i].x, projectObjects[i].y);
+                        break;
+                    }
+                }
+            }
         });
 	//Radio for code
 	checkedCode = portfolio.append("svg:image")
@@ -106,25 +121,126 @@ function drawSortControls(portfolio) {
             checkedCode.attr("visibility", "visible");
 			uncheckedDesign.attr("visibility", "visible");
 			checkedDesign.attr("visibility", "hidden");
+			//Sort the projectObjects by code
+			projectObjects.sort(codeComparator);
+			projectObjects = calcDimensions(projectObjects);
+			//Iterate through new co-ordinates and call moveTile on every such tileGroupELement
+			for(var i=0; i<projectObjects.length; i++){
+				//get its tile Id and search for the same group element
+				for(var j=0; j<tileGroupElementObjects.length; j++){
+					if(projectObjects[i].tileId == tileGroupElementObjects[j].attr("tileId")){
+						moveTile(projectObjects[i].tileId, projectObjects[i].x, projectObjects[i].y);
+						break;
+					}
+				}
+			}
         });
 }
+function designComparator( tile1, tile2 ){
+    return tile2.design - tile1.design;
+}
+function codeComparator( tile1, tile2 ){
+	return tile2.code - tile1.code;
+}
+function calcDimensions( projectObjects ){
+	// Manufacture starting domensions for tiles
+    var col = 0;
+    var x1 = 10;
+    var y1 = 100;
+    var x2 = 350;
+    var y2 = 100;
+    var tileSide = 300;
+    for(var i=0; i<projectObjects.length; i++){
+        if(col == 0){
+            projectObjects[i].x = x1;
+            projectObjects[i].y = y1;
+            y1 = y1 + 350;
+            projectObjects[i].width = 300;
+        	projectObjects[i].height = 300;
+			col = 1;
+    	}
+		else if(col == 1){
+			projectObjects[i].x = x2;
+            projectObjects[i].y = y2;
+            y2 = y2 + 350;
+            projectObjects[i].width = 300;
+            projectObjects[i].height = 300;
+            col = 0;
+		}
+    }
+	return projectObjects;
+}
+function readProjects(portfolio) {
+	//Reads projects.json to create 6 tiles for every one project and create a tile object
+	//load media/projects.json file
+	d3.json("media/projects.json", function(json){
+		json.sort(function(a,b){return b.design-a.design;});
+		//add unique tileId
+		for(var i=0; i<json.length; i++){
+			json[i].tileId = i;
+		}
+		projectObjects = JSON.parse(JSON.stringify(json))
+		projectObjects = calcDimensions(projectObjects);
+		renderTiles(portfolio);
+	});
+}
 function renderTiles(portfolio) {
-	portfolio.append("rect")
-				.attr("x", 10)
-				.attr("y", 100)
-				.attr("width", 300)
-				.attr("height", 300)
-					.append("rect")
-						.attr("x", 0)
-	                	.attr("y", 0)
-    	        	    .attr("width", 30)
-        		        .attr("height", 30)
-						.attr("fill", "red");
-	portfolio.append("rect")
-                .attr("x", 350)
-                .attr("y", 100)
-                .attr("width", 300)
-                .attr("height", 300);
-	//Read the projects.json
-	
+	//iterate through projectObjects and render each
+	for(var i=0; i<projectObjects.length; i++){
+		var tileGroupElement = portfolio.append("g")
+								.attr("tileId",projectObjects[i].tileId);
+		tileGroupElement.append("rect")
+				.attr("class", "tile-rect")
+				.attr("x", projectObjects[i].x)
+				.attr("y", projectObjects[i].y)
+				.attr("width", projectObjects[i].width)
+				.attr("height", projectObjects[i].height)
+				.attr("data", projectObjects[i]);
+		//Draw the title rect
+		tileGroupElement.append("rect")
+				.attr("class", "title-rect")
+				.attr("x", projectObjects[i].x)
+				.attr("y", projectObjects[i].y + 230)
+				.attr("width", projectObjects[i].width)
+				.attr("height", 50);
+		//Make little design bar chart
+		var barY = projectObjects[i].y + 280;
+		var barWidth = (projectObjects[i].design/100)*projectObjects[i].width;
+		tileGroupElement.append("rect")
+				.attr("x", projectObjects[i].x)
+				.attr("y", projectObjects[i].y + 280)
+				.attr("width", barWidth)
+				.attr("height", 20)
+				.attr("class","design-bar");
+		//Make code bar chart
+		tileGroupElement.append("rect")
+                .attr("x", projectObjects[i].x + barWidth)
+                .attr("y", projectObjects[i].y + 280)
+                .attr("width", projectObjects[i].width - barWidth)
+                .attr("height", 20)
+                .attr("class","code-bar");
+		//Add org text
+		tileGroupElement.append("text")
+				.attr("class","title-text")
+				.attr("x", projectObjects[i].x + 3)
+				.attr("y", projectObjects[i].y + 263)
+				.text(projectObjects[i].org);
+		//add tile group element to tileGroupElementObjects array
+		tileGroupElementObjects.push(tileGroupElement);
+	}
+}
+function moveTile(tileId, x, y){
+	//get group element of given tile id
+	for(var i=0; i<tileGroupElementObjects.length; i++){
+		if(tileId == tileGroupElementObjects[i].attr("tileId")){
+			//Get its rect's co ordinates to calculate transformation
+			var tileRect = tileGroupElementObjects[i].selectAll(".tile-rect");
+			var xCurr = tileRect.attr("x");
+			var yCurr = tileRect.attr("y");
+			tileGroupElementObjects[i].transition()
+				.duration(1000)
+				.attr("transform", "translate("+(x - xCurr)+","+(y - yCurr)+")");
+			return;
+		}
+	}
 }

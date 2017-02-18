@@ -11,6 +11,21 @@
 .design-legend {
 	fill: #da0c6f;
 }
+.design-bar {
+	fill: #da0c6f;
+}
 .code-legend {
 	fill: #00b2ac;
+}
+.code-bar {
+	fill: #00b2ac;
+}
+.title-rect{
+	fill: #e6e7e8;
+}
+.title-text {
+	font-family: "Mada";
+	font-size: 25px;
+	/*font-weight: bold;*/
+	fill: #3D3C3C;
 }
