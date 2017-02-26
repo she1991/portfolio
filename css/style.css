@@ -29,3 +29,12 @@
 	/*font-weight: bold;*/
 	/*fill: #3D3C3C;*/
 }
+.social-table {
+	border: none;!important
+}
+.design-highlight {
+	color: #00b2ac;
+}
+.tile {
+	cursor: pointer;
+}

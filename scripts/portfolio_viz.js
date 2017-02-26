@@ -1,6 +1,6 @@
 var baseUrl = "/portfolio";
 var widthPortfolio = 700;
-var heightPortfolio = 1500;
+var heightPortfolio = 1180;
 var marginPortfolio = {top: 20, right: 10, bottom: 20, left: 10};
 widthPortfolio = widthPortfolio - marginPortfolio.left - marginPortfolio.right;
 heightPortfolio = heightPortfolio - marginPortfolio.top - marginPortfolio.bottom;
@@ -189,8 +189,14 @@ function renderTiles(portfolio) {
 	//iterate through projectObjects and render each
 	for(var i=0; i<projectObjects.length; i++){
 		var tileGroupElement = portfolio.append("g")
-								.attr("tileId",projectObjects[i].tileId);
-		tileGroupElement.append("rect")
+								.attr("tileId",projectObjects[i].tileId)
+								.attr("class", "tile")
+								.attr("page", projectObjects[i].page)
+								.on("click", function(){
+									window.location.href = baseUrl + "/" + this.attributes["page"].value;
+								});
+		tileGroupElement.append("svg:image")
+		        .attr("xlink:href",baseUrl + "/images/" + projectObjects[i].image)
 				.attr("class", "tile-rect")
 				.attr("x", projectObjects[i].x)
 				.attr("y", projectObjects[i].y)
