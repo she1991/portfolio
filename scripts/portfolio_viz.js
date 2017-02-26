@@ -1,3 +1,4 @@
+var baseUrl = "/portfolio";
 var widthPortfolio = 700;
 var heightPortfolio = 1500;
 var marginPortfolio = {top: 20, right: 10, bottom: 20, left: 10};
@@ -63,7 +64,7 @@ function drawSortControls(portfolio) {
                 .text("Sort :");
 	//Radio for design
 	checkedDesign = portfolio.append("svg:image")
-        .attr("xlink:href","../images/checked_design.svg")
+        .attr("xlink:href", baseUrl + "/images/checked_design.svg")
         .attr("width", 50)
         .attr("height", 50)
         .attr("x", 600)
@@ -72,7 +73,7 @@ function drawSortControls(portfolio) {
 			console.log("checked design clicked");
         });
 	uncheckedDesign = portfolio.append("svg:image")
-        .attr("xlink:href","../images/unchecked_design.svg")
+        .attr("xlink:href",baseUrl + "/images/unchecked_design.svg")
         .attr("width", 50)
         .attr("height", 50)
         .attr("x", 600)
@@ -100,7 +101,7 @@ function drawSortControls(portfolio) {
         });
 	//Radio for code
 	checkedCode = portfolio.append("svg:image")
-        .attr("xlink:href","../images/checked_code.svg")
+        .attr("xlink:href",baseUrl + "/images/checked_code.svg")
         .attr("width", 50)
         .attr("height", 50)
         .attr("x", 600)
@@ -110,7 +111,7 @@ function drawSortControls(portfolio) {
 			console.log("checked code clicked");
         });
 	uncheckedCode = portfolio.append("svg:image")
-        .attr("xlink:href","../images/unchecked_code.svg")
+        .attr("xlink:href",baseUrl + "/images/unchecked_code.svg")
         .attr("width", 50)
         .attr("height", 50)
         .attr("x", 600)
@@ -173,7 +174,7 @@ function calcDimensions( projectObjects ){
 function readProjects(portfolio) {
 	//Reads projects.json to create 6 tiles for every one project and create a tile object
 	//load images/projects.json file
-	d3.json("../images/projects.json", function(json){
+	d3.json(baseUrl + "/images/projects.json", function(json){
 		json.sort(function(a,b){return b.design-a.design;});
 		//add unique tileId
 		for(var i=0; i<json.length; i++){
