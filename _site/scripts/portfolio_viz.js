@@ -65,6 +65,7 @@ function drawSortControls(portfolio) {
 	//Radio for design
 	checkedDesign = portfolio.append("svg:image")
         .attr("xlink:href", baseUrl + "/images/checked_design.svg")
+		.attr("class", "sort-button")
         .attr("width", 50)
         .attr("height", 50)
         .attr("x", 600)
@@ -74,6 +75,7 @@ function drawSortControls(portfolio) {
         });
 	uncheckedDesign = portfolio.append("svg:image")
         .attr("xlink:href",baseUrl + "/images/unchecked_design.svg")
+		.attr("class", "sort-button")
         .attr("width", 50)
         .attr("height", 50)
         .attr("x", 600)
@@ -102,6 +104,7 @@ function drawSortControls(portfolio) {
 	//Radio for code
 	checkedCode = portfolio.append("svg:image")
         .attr("xlink:href",baseUrl + "/images/checked_code.svg")
+		.attr("class", "sort-button")
         .attr("width", 50)
         .attr("height", 50)
         .attr("x", 600)
@@ -112,6 +115,7 @@ function drawSortControls(portfolio) {
         });
 	uncheckedCode = portfolio.append("svg:image")
         .attr("xlink:href",baseUrl + "/images/unchecked_code.svg")
+		.attr("class", "sort-button")
         .attr("width", 50)
         .attr("height", 50)
         .attr("x", 600)
@@ -201,8 +205,48 @@ function renderTiles(portfolio) {
 				.attr("x", projectObjects[i].x)
 				.attr("y", projectObjects[i].y)
 				.attr("width", projectObjects[i].width)
-				.attr("height", projectObjects[i].height)
-				.attr("data", projectObjects[i]);
+				.attr("height", projectObjects[i].height-70)
+				.attr("data", JSON.stringify(projectObjects[i]))
+				.on("mouseover", function(){
+					var tileData = JSON.parse(d3.select(this).attr("data"));
+					var tileId = tileData["tileId"];
+					for(var i=0; i<tileGroupElementObjects.length; i++){
+				        if(tileId == tileGroupElementObjects[i].attr("tileId")){
+							//Get hover rect
+							var hoverRect = tileGroupElementObjects[i].selectAll(".hover-rect");
+							if(hoverRect.attr("visibility") != "visible"){
+								hoverRect.attr("visibility", "visible");
+							}
+							break;
+						}
+					}
+				});
+		var hoverElement = tileGroupElement.append("g")
+								.attr("class", "hover-rect")
+								.attr("visibility", "hidden")
+								.on("mouseout", function(){
+                    				var hoverElement = d3.select(this);
+                    				hoverRect.attr("visibility", "hidden");
+				                });
+		hoverElement.append("rect")
+                .attr("class", "tile-rect hover-tile")
+                .attr("x", projectObjects[i].x)
+                .attr("y", projectObjects[i].y)
+                .attr("width", projectObjects[i].width)
+                .attr("height", projectObjects[i].height-70);
+		//split hovertitle text by / sign
+		var hoverTitleTexts = projectObjects[i].title.split("/");
+		var hoverTitleTextY = projectObjects[i].y + 35;
+		var hoverTitleTextX = projectObjects[i].x + 15;
+		//Render each of these split texts on to hoverElement
+		for(var j=0; j < hoverTitleTexts.length; j++){
+			hoverElement.append("text")
+						.attr("class", "hover-text")
+						.attr("x", hoverTitleTextX)
+						.attr("y", hoverTitleTextY)
+						.text(hoverTitleTexts[j]);
+			hoverTitleTextY = hoverTitleTextY + 30;
+		}
 		//Draw the title rect
 		tileGroupElement.append("rect")
 				.attr("class", "title-rect")
@@ -245,7 +289,7 @@ function moveTile(tileId, x, y){
 			var xCurr = tileRect.attr("x");
 			var yCurr = tileRect.attr("y");
 			tileGroupElementObjects[i].transition()
-				.duration(getRndInteger(400, 1500))
+				.duration(getRndInteger(800, 1500))
 				.attr("transform", "translate("+(x - xCurr)+","+(y - yCurr)+")");
 			return;
 		}

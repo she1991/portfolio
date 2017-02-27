@@ -2,9 +2,8 @@
 layout: index
 ---
 
-## Design Technologist @ Simulation and Game Applications Lab,<br>University of Texas at Austin.<br><br>Seeking internships.
+## Design Technologist @ Simulation and Game Applications Lab,<br>University of Texas at Austin.<br>Seeking internships.
 
-### Portfolio
 <div class="portfolio-div"></div>
 
 ### About Me
