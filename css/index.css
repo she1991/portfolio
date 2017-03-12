@@ -1,0 +1,17 @@
+body {
+    display:flex;
+    margin:0;
+}
+
+.main-page-div {
+    width:40%;
+    height:100%;
+    background-color:black;
+    flex: 0 0 40%;
+}
+.main-page-div + .portfolio-div {
+    width:60%;
+    height:100%;
+    flex: 1;
+    overflow: hidden;
+}

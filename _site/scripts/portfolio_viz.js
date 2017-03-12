@@ -13,9 +13,11 @@ var tileGroupElementObjects = [];
 function initPortfolioSVG() {
 	var portfolioSVG = d3.select(".portfolio-div")
                     .append("svg")
-                        .attr("width", widthPortfolio)
-                        .attr("height", heightPortfolio)
-                        .attr("class", "portfolio-svg");
+                        .attr("width", "100%")
+                        .attr("height", "100%")
+                        .attr("class", "portfolio-svg")
+                        //.attr("preserveAspectRatio", "xMinYMin meet")
+                        .attr("viewBox", "0 0 "+widthPortfolio+" "+heightPortfolio);
 	//Invert co-ordinates for easier coding
 	//Using d3 margin conventions
 	portfolio = portfolioSVG.append("g")
@@ -37,9 +39,9 @@ function drawLegend(portfolio) {
 				.attr("height", 40);
 	portfolio.append("text")
 				.attr("x", 80)
-				.attr("y", 33)
+				.attr("y", 28)
 				.attr("font-family", "Mada")
-				.attr("font-size", "30px")
+				.attr("font-size", "25px")
 				.text(": Design");
 	portfolio.append("rect")
                 .attr("class", "code-legend")
