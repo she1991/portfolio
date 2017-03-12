@@ -51,18 +51,18 @@ function drawLegend(portfolio) {
                 .attr("height", 40);
     portfolio.append("text")
                 .attr("x", 80)
-                .attr("y", 78)
+                .attr("y", 73)
                 .attr("font-family", "Mada")
-                .attr("font-size", "30px")
+                .attr("font-size", "25px")
                 .text(": Code");				
 }
 function drawSortControls(portfolio) {
 	//Sort by text
 	portfolio.append("text")
-                .attr("x", 520)
-                .attr("y", 55)
+                .attr("x", 540)
+                .attr("y", 50)
                 .attr("font-family", "Mada")
-                .attr("font-size", "30px")
+                .attr("font-size", "25px")
                 .text("Sort :");
 	//Radio for design
 	checkedDesign = portfolio.append("svg:image")
